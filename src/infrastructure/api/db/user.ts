@@ -18,7 +18,8 @@ import {
 } from "@/core/domain/entities/influencer";
 
 export class DrizzleUserRepository<TUser>
-  implements UserRepository<User & TUser> {
+  implements UserRepository<User & TUser>
+{
   async findById(id: string): Promise<Result<User & TUser, string>> {
     return await ResultAsync.fromThrowable(async () => {
       const result = await db.query.users.findFirst({
@@ -158,12 +159,16 @@ export class DrizzleAuthorRepository<
 > extends DrizzleUserRepository<AuthorUser> {
   async findAll(payload: GetAllPayload) {
     return await ResultAsync.fromThrowable(async () => {
+      const conditions = [arrayOverlaps(users.role, ["AUTHOR"])];
+      if (payload.search) {
+        conditions.push(ilike(users.name, `%${payload.search}`));
+      }
+      const where = and(...conditions);
+
       const result = await db.query.users.findMany({
         limit: payload.limit,
         offset: payload.offset,
-        where: payload.search
-          ? ilike(users.name, `%${payload.search}%`)
-          : undefined,
+        where,
         orderBy: [desc(users.createdAt)],
         with: {
           authoredBooks: true,
@@ -211,5 +216,3 @@ export class DrizzleAuthorRepository<
     return await super.create(payload);
   }
 }
-
-

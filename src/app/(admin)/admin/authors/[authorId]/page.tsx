@@ -45,7 +45,7 @@ export default async function AuthorDetail({
     <section className="py-12">
       <div className="container mx-auto space-y-6">
         <Link
-          href="/admin/books"
+          href="/admin/authors"
           className={buttonVariants({ variant: "secondary" })}
         >
           <ArrowLeft className="mr-2 inline-block h-4 w-4" />
@@ -54,7 +54,7 @@ export default async function AuthorDetail({
         <div className="flex gap-12">
           <AuthorImage
             alt={author.name}
-            className="max-h-100"
+            className="max-h-100 max-w-100"
             src={author.image}
           />
           <div>

@@ -1,8 +1,8 @@
 import type { Result } from "neverthrow";
 import type { Recommendation } from "../../domain/entities/recommendation";
 import type { PaginatedResponse } from "../types/paginatinated-response";
-import { Book } from "@/core/domain/entities/book";
-import { AuthorUser, User } from "@/core/domain/entities/user";
+import type { Book } from "@/core/domain/entities/book";
+import type { AuthorUser, User } from "@/core/domain/entities/user";
 
 export interface GetAllRecommendationsParams {
   limit: number;

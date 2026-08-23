@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import type {
   FindByBookIdResult,
   FindByInfluencerIdResult,
@@ -85,6 +85,14 @@ export class DrizzleRecommendationRepository
   async getAll(
     params: GetAllRecommendationsParams,
   ): Promise<Result<PaginatedResponse<Recommendation>, string>> {
+    const whereConditions = [];
+    if (params.authorId) {
+      whereConditions.push(eq(recommendations.authorId, params.authorId));
+    }
+    if (params.bookId) {
+      whereConditions.push(eq(recommendations.bookId, params.bookId));
+    }
+    const where = and(...whereConditions);
     const result = await ResultAsync.fromThrowable(
       async () => {
         const recs = await db.query.recommendations.findMany({
@@ -93,6 +101,7 @@ export class DrizzleRecommendationRepository
             book: true,
           },
           orderBy: [desc(recommendations.createdAt)],
+          where,
         });
         const count = await db.$count(recommendations);
         return {

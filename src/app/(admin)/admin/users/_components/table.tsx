@@ -11,12 +11,28 @@ import { ROLE_LABELS, USER_ROLES } from "@/core/domain/entities/user";
 import Link from "next/link";
 import { Search, X } from "lucide-react";
 import { AsyncSearchMultiDropdown } from "@/components/widgets/async-search-dropdown/ui/multi-select";
+import { DEFAULT_CURRENT_PAGE, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
+import {
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsString,
+  useQueryState,
+} from "nuqs";
 
 export function Table() {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string[]>([]);
+  const [page, setPage] = useQueryState(
+    DEFAULT_CURRENT_PAGE.name,
+    parseAsInteger.withDefault(DEFAULT_CURRENT_PAGE.value),
+  );
+  const [pageSize, setPageSize] = useQueryState(
+    DEFAULT_PAGE_SIZE.name,
+    parseAsInteger.withDefault(DEFAULT_PAGE_SIZE.value),
+  );
+  const [search, setSearch] = useQueryState("search");
+  const [roleFilter, setRoleFilter] = useQueryState(
+    "roleFilter",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
 
   const query = useQuery({
     queryKey: ["users", page, pageSize, search, roleFilter],
@@ -37,15 +53,17 @@ export function Table() {
   const activeFilters = !!search || !!roleFilter;
 
   function resetFilters() {
-    setSearch("");
+    setSearch(null);
     setRoleFilter([]);
     setPage(0);
   }
 
-  const handleSearchChange = useCallback((value: string) => {
-    setSearch(value);
+  const handleSearchChange = (value: string) => {
     setPage(0);
-  }, []);
+
+    if (!value) return setSearch(null);
+    setSearch(value);
+  };
 
   return (
     <>
@@ -55,7 +73,7 @@ export function Table() {
           <div className="relative min-w-65">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
             <DebouncedInput
-              value={search}
+              value={search ?? ""}
               debounceTime={500}
               onValueChange={handleSearchChange}
               placeholder="Search users…"
@@ -69,6 +87,7 @@ export function Table() {
             value={roleFilter}
             onChange={(newValue) => {
               setRoleFilter(newValue);
+              setPage(0)
             }}
             fetchPage={async ({ search }) => {
               return USER_ROLES.filter((role) =>

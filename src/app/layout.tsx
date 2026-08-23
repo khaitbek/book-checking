@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/query-provider";
@@ -45,22 +46,24 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <QueryProvider>
-          <TooltipProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <ImageKitProvider
-                urlEndpoint={`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`}
+        <NuqsAdapter>
+          <QueryProvider>
+            <TooltipProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
               >
-                {children}
-              </ImageKitProvider>
-            </ThemeProvider>
-          </TooltipProvider>
-        </QueryProvider>
+                <ImageKitProvider
+                  urlEndpoint={`https://ik.imagekit.io/${process.env.NEXT_PUBLIC_IMAGEKIT_ID}`}
+                >
+                  {children}
+                </ImageKitProvider>
+              </ThemeProvider>
+            </TooltipProvider>
+          </QueryProvider>
+        </NuqsAdapter>
         <Toaster richColors position="top-right" closeButton />
       </body>
     </html>

@@ -4,19 +4,14 @@ import { DeleteBook } from "./_components/actions/delete-book";
 import { EditCover } from "./_components/actions/edit-cover";
 import { EditBook } from "./_components/actions/edit-book";
 import { redirect } from "next/navigation";
-import {
-  BookActions,
-  BookAuthor,
-  BookCover,
-  BookDescription,
-  BookTitle,
-} from "@/components/widgets/books/ui/book";
-import { Separator } from "@/components/ui/separator";
+import { BookActions } from "@/components/widgets/books/ui/book";
 import { UploadBookCover } from "@/features/upload-book-cover";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { isAdminUser } from "@/core/domain/entities/user";
+import { Widget as BookDetailsWidget } from "@/components/widgets/books/ui/book-details";
+import { InfluencerMentionsWidget } from "@/components/widgets/books/ui/influencer-mentions";
 
 export default async function BookDetailPage({
   params,
@@ -40,20 +35,9 @@ export default async function BookDetailPage({
           Back to books
         </Link>
         <div className="flex flex-wrap gap-12">
-          <div className="max-w-75">
-            <BookCover alt={book.title} recommendationCount={book.recommendations.length} className="max-h-100 w-auto" src={book.coverImage} />
-          </div>
-          <div>
-            <div className="max-w-md">
-              <BookTitle className="relative line-clamp-none">{book.title}</BookTitle>
-              <BookDescription className="line-clamp-none">{book.description}</BookDescription>
-            </div>
-            <Separator />
-            <div>
-              <BookAuthor author={book.author} />
-            </div>
-          </div>
+          <BookDetailsWidget book={book} />
           <Actions book={book} />
+          <InfluencerMentionsWidget bookId={bookId} />
         </div>
       </div>
     </section>

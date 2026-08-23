@@ -2,7 +2,6 @@
 
 import { DataTable } from "@/components/widgets/data-table";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import {
   getAllBooks,
   searchAuthors,
@@ -16,13 +15,21 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { X } from "lucide-react";
 import type { Category } from "@/core/domain/entities/category";
 import { DebouncedInput } from "@/components/ui/debounced-input";
+import { parseAsInteger, useQueryState } from "nuqs";
+import { DEFAULT_CURRENT_PAGE, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
 
 export function Table() {
-  const [page, setPage] = useState(0);
-  const [search, setSearch] = useState("");
-  const [pageSize, setPageSize] = useState(10);
-  const [authorId, setAuthorId] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState<string | null>(null);
+  const [page, setPage] = useQueryState(
+    DEFAULT_CURRENT_PAGE.name,
+    parseAsInteger.withDefault(DEFAULT_CURRENT_PAGE.value),
+  );
+  const [pageSize, setPageSize] = useQueryState(
+    DEFAULT_PAGE_SIZE.name,
+    parseAsInteger.withDefault(DEFAULT_PAGE_SIZE.value),
+  );
+  const [search, setSearch] = useQueryState("search");
+  const [authorId, setAuthorId] = useQueryState("authorId");
+  const [categoryId, setCategoryId] = useQueryState("categoryId");
   const query = useQuery({
     queryKey: [
       "books",
@@ -31,7 +38,7 @@ export function Table() {
         pageSize,
         authorId,
         categoryId,
-        search
+        search,
       },
     ],
     queryFn: async () => {
@@ -54,6 +61,7 @@ export function Table() {
     setCategoryId(null);
     setPage(0);
     setPageSize(10);
+    setSearch(null);
   }
 
   return (
@@ -67,6 +75,7 @@ export function Table() {
             placeholder="Search for an author"
             onChange={(authorId) => {
               setAuthorId(authorId);
+              setPage(DEFAULT_CURRENT_PAGE.value);
             }}
             fetchPage={async ({ search }) => {
               const result = await searchAuthors(search);
@@ -84,6 +93,7 @@ export function Table() {
             placeholder="Search for a category"
             onChange={(categoryId) => {
               setCategoryId(categoryId);
+              setPage(DEFAULT_CURRENT_PAGE.value);
             }}
             fetchPage={async ({ search }) => {
               const result = await searchCategoriesAction(search);
@@ -94,8 +104,10 @@ export function Table() {
           <DebouncedInput
             debounceTime={500}
             placeholder="Search for a book"
-            value={search}
+            value={search ?? ""}
             onValueChange={(value) => {
+              if (!value) return setSearch(null);
+              setPage(DEFAULT_CURRENT_PAGE.value);
               setSearch(value);
             }}
           />
@@ -118,7 +130,6 @@ export function Table() {
         totalData={query.data?.total ?? 0}
         onPaginationChange={(state) => {
           setPage(state.pageIndex);
-          setPageSize(state.pageSize);
         }}
         withPagination
       />

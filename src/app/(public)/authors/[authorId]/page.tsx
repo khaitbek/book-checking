@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { Widget as AuthorDetails } from "@/components/widgets/author/ui/author-details";
+import { AuthorBooks } from "@/features/author-books";
 
 const getAuthor = cache((id: User["id"]) => authorRepository.findById(id));
 
@@ -57,6 +58,7 @@ export default async function ({ params }: Props) {
     <section className="py-12">
       <div className="container mx-auto">
         <AuthorDetails author={result.value} />
+        <AuthorBooks author={result.value} books={result.value.authoredBooks} />
       </div>
     </section>
   );

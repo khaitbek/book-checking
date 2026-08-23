@@ -2,19 +2,22 @@
 
 import { DataTable } from "@/components/widgets/data-table";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { getAllAuthors, searchAuthors } from "../_actions/query";
 import { columns } from "./columns";
 import type { User } from "@/core/domain/entities/user";
 import Link from "next/link";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { AsyncSearchDropdown } from "@/components/widgets/async-search-dropdown/ui/widget";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 export function Table() {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [search, setSearch] = useState<string | null>(null);
+  const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(0));
+  const [pageSize, setPageSize] = useQueryState(
+    "pageSize",
+    parseAsInteger.withDefault(10),
+  );
+  const [search, setSearch] = useQueryState("search");
 
   const query = useQuery({
     queryKey: ["authors", page, pageSize, search],
@@ -42,18 +45,13 @@ export function Table() {
     <>
       <div className="flex items-center justify-between flex-wrap gap-6 mb-6">
         <div className="flex gap-6 items-center">
-          {/* Async search bar – reuses the same dropdown component as books
-              but in "search bar" style: value is always null (no selection),
-              we just capture what the user types via onChange. */}
-          <div className="relative min-w-[260px]">
+          <div className="relative min-w-65">
             <AsyncSearchDropdown<User>
               value={search}
               getOptionValue={(author) => author.name}
               getOptionLabel={(author) => author.name}
               placeholder={
-                search
-                  ? `Searching: "${search}"`
-                  : "Search authors…"
+                search ? `Searching: "${search}"` : "Search authors…"
               }
               searchPlaceholder="Type a name…"
               onChange={(_value, item) => {
@@ -67,7 +65,7 @@ export function Table() {
                 if (result.success === false) return [];
                 return result.data ?? [];
               }}
-              className="min-w-[260px]"
+              className="min-w-65"
             />
           </div>
 

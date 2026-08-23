@@ -1,7 +1,5 @@
 "use client";
-
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import {
   getAllRecommendations,
   searchBooks,
@@ -9,20 +7,27 @@ import {
 } from "../_actions/query";
 import { AsyncSearchDropdown } from "@/components/widgets/async-search-dropdown/ui/widget";
 import type { InfluencerUser, User } from "@/core/domain/entities/user";
-import { searchAuthors } from "../../authors/_actions/query";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { DataTable } from "@/components/widgets/data-table";
 import { columns } from "./columns";
 import Link from "next/link";
 import type { Book } from "@/core/domain/entities/book";
-import { InfluencerWithRecommendationCount } from "@/core/domain/entities/influencer";
+import { DEFAULT_CURRENT_PAGE, DEFAULT_PAGE_SIZE } from "@/lib/pagination";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 export function Table() {
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [authorId, setAuthorId] = useState<string | null>(null);
-  const [bookId, setBookId] = useState<string | null>(null);
+  const [page, setPage] = useQueryState(
+    DEFAULT_CURRENT_PAGE.name,
+    parseAsInteger.withDefault(DEFAULT_CURRENT_PAGE.value),
+  );
+  const [pageSize, setPageSize] = useQueryState(
+    DEFAULT_PAGE_SIZE.name,
+    parseAsInteger.withDefault(DEFAULT_PAGE_SIZE.value),
+  );
+  const [authorId, setAuthorId] = useQueryState("authorId");
+  const [bookId, setBookId] = useQueryState("bookId");
+
   const query = useQuery({
     queryKey: [
       "recommendations",
@@ -65,6 +70,7 @@ export function Table() {
             placeholder="Search for an influencer"
             onChange={(influencerId) => {
               setAuthorId(influencerId);
+              setPage(0)
             }}
             fetchPage={async ({ search }) => {
               const result = await searchInfluencersByName(search);
@@ -82,6 +88,7 @@ export function Table() {
             placeholder="Search for a book"
             onChange={(bookId) => {
               setBookId(bookId);
+              setPage(0)
             }}
             fetchPage={async ({ search }) => {
               const result = await searchBooks({

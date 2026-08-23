@@ -148,7 +148,7 @@ export function AsyncSearchDropdown<T>({
 
   // Search → fetch with debounce + cancel on unmount/restart.
   React.useEffect(() => {
-    if (!open) return;
+    // if (!open) return;
     const ctrl = new AbortController();
     const delay = search ? debounceMs : 0;
     const timer = setTimeout(async () => {
@@ -169,7 +169,7 @@ export function AsyncSearchDropdown<T>({
       clearTimeout(timer);
       ctrl.abort();
     };
-  }, [open, search, debounceMs]);
+  }, [search, debounceMs]);
 
   React.useEffect(() => {
     if (!open) setSearch("");

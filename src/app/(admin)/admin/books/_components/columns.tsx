@@ -1,21 +1,22 @@
+import { EntityLink } from "@/components/widgets/entity-link";
 import type { Book } from "@/core/domain/entities/book";
 import { formatHttpDate } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 
 export const columns: ColumnDef<Book>[] = [
   {
     accessorKey: "title",
     header: "Title",
     cell: ({ row }) => {
+      const book = row.original;
       return (
-        <Link
+        <EntityLink
           href="/admin/books/[bookId]"
           as={`/admin/books/${row.original.id}`}
-          className="text-blue-500 hover:underline"
-        >
-          {row.original.title}
-        </Link>
+          title={book.title}
+          imageUrl={book.coverImage}
+          description={book.description}
+        />
       );
     },
   },
@@ -23,14 +24,15 @@ export const columns: ColumnDef<Book>[] = [
     accessorKey: "author.name",
     header: "Author",
     cell: ({ row }) => {
+      const book = row.original;
+
       return (
-        <Link
+        <EntityLink
           href="/admin/authors/[authorId]"
-          as={`/admin/authors/${row.original.author.id}`}
-          className="text-blue-500 hover:underline"
-        >
-          {row.original.author.name}
-        </Link>
+          as={`/admin/authors/${book.authorId}`}
+          title={book.author.name}
+          imageUrl={book.author.image}
+        />
       );
     },
   },
@@ -38,7 +40,9 @@ export const columns: ColumnDef<Book>[] = [
     accessorFn: (row) => row.recommendations.length,
     header: "Recommendations",
     cell: ({ row }) => (
-      <span className="text-center w-full inline-block">{row.original.recommendations.length}</span>
+      <span className="text-center w-full inline-block">
+        {row.original.recommendations.length}
+      </span>
     ),
   },
   {

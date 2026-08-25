@@ -1,20 +1,20 @@
+import { EntityLink } from "@/components/widgets/entity-link";
 import type { AuthorUser, User } from "@/core/domain/entities/user";
 import { formatHttpDate } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 
 export const columns: ColumnDef<User & AuthorUser>[] = [
   {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => (
-      <Link
+      <EntityLink
         href="/admin/authors/[authorId]"
         as={`/admin/authors/${row.original.id}`}
-        className="text-blue-500 hover:underline font-medium"
-      >
-        {row.original.name}
-      </Link>
+        title={row.original.name}
+        description={row.original.bio}
+        imageUrl={row.original.image}
+      />
     ),
   },
   {
@@ -25,28 +25,18 @@ export const columns: ColumnDef<User & AuthorUser>[] = [
       if (!industry) return <span className="text-muted-foreground">—</span>;
       return (
         <div className="flex flex-wrap gap-1">
-          {industry.split(",").slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-sm"
-            >
-              {tag.trim().toLowerCase()}
-            </span>
-          ))}
+          {industry
+            .split(",")
+            .slice(0, 3)
+            .map((tag) => (
+              <span
+                key={tag}
+                className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded-sm"
+              >
+                {tag.trim().toLowerCase()}
+              </span>
+            ))}
         </div>
-      );
-    },
-  },
-  {
-    accessorKey: "bio",
-    header: "Bio",
-    cell: ({ row }) => {
-      const bio = row.original.bio;
-      if (!bio) return <span className="text-muted-foreground">—</span>;
-      return (
-        <span className="text-sm text-muted-foreground line-clamp-1 max-w-60">
-          {bio}
-        </span>
       );
     },
   },
@@ -55,11 +45,7 @@ export const columns: ColumnDef<User & AuthorUser>[] = [
     header: "Books",
     cell: ({ row }) => {
       const count = row.original.authoredBooks?.length ?? 0;
-      return (
-        <span className="text-sm tabular-nums">
-          {count}
-        </span>
-      );
+      return <span className="text-sm tabular-nums">{count}</span>;
     },
   },
   {

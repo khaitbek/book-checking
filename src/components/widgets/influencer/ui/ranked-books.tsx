@@ -16,14 +16,11 @@ export async function InfluencerRankedBooksWidget({
 
   const recommendations = result.value;
 
-  if (!recommendations.length) return null;
-
-  const totalInfluencerMentions = recommendations.length;
-
   return (
     <div className="flex flex-col gap-12 w-full">
       <TypographyH2>
-        {totalInfluencerMentions} books {influencer.name} mentioned, ranked!
+        <span className="underline mr-2">{influencer.name}</span>
+        tavsiya qilgan kitoblar!
       </TypographyH2>
 
       {/* Header Section */}
@@ -41,7 +38,7 @@ export async function InfluencerRankedBooksWidget({
             ))
             .otherwise(() => (
               <div className="w-full aspect-square bg-neutral-200 flex items-center justify-center">
-                No Image
+                Rasm mavjud emas
               </div>
             ))}
         </div>

@@ -65,11 +65,11 @@ export function BookRecommendation({
                 </Link>
               </TypographyH3>
               <Link
-                href={`/authors/${author.id}`}
+                href={author.role.includes("AUTHOR") ? `/authors/${author.id}` : `/influencers/${author.id}`}
                 target="_blank"
                 className="text-neutral-600 text-lg mb-6 underline"
               >
-                by {author.name}
+               Muallif - {author.name}
               </Link>
             </>
           ))
@@ -100,7 +100,7 @@ export function BookRecommendation({
           href={recommendation.sourceUrl}
           className="text-sm transition-colors inline-block px-2 py-1 rounded-sm max-w-max bg-foreground text-background"
         >
-          View source
+          Manbani ko‘rish
         </Link>
       </div>
     </div>

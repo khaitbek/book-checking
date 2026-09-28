@@ -1,4 +1,4 @@
-import { InfluencerRepository } from "../application/ports/influencer";
+import type { InfluencerRepository } from "../application/ports/influencer";
 
 interface Payload {
   limit: number;
@@ -18,6 +18,8 @@ export class GetAllInfluencersUseCase {
       limit: payload.limit,
       offset: payload.offset,
       search: payload.search,
+      sortOrder: payload.sortOrder,
+      sortBy: payload.sortBy,
     });
   }
 }

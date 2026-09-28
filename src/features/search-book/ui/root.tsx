@@ -9,7 +9,7 @@ export function SearchBookRoot() {
     const [books, setBooks] = useState<Book[]>([]);
 
     return (
-        <div className="space-y-8">
+        <div>
             <SearchBookInput onChange={setBooks} />
             <SearchBookResults results={books} />
         </div>

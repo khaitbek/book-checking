@@ -1,8 +1,8 @@
 import { TypographyH2 } from "@/components/ui/typography";
 import { BooksGrid } from "@/components/widgets/books/ui/grid";
 import { BookList } from "@/components/widgets/books/ui/list";
-import { Book } from "@/core/domain/entities/book";
-import { User } from "@/core/domain/entities/user";
+import type { Book } from "@/core/domain/entities/book";
+import type { User } from "@/core/domain/entities/user";
 
 export async function Root({ books, author }: { books: Book[]; author: User }) {
   const mappedBooks = books.map((book) => ({
@@ -12,9 +12,9 @@ export async function Root({ books, author }: { books: Book[]; author: User }) {
 
   return (
     <>
-      <section className="pt-12">
+      <section className="py-12">
         <div className="">
-          <TypographyH2 className="mb-6">Authored books</TypographyH2>
+          <TypographyH2 className="mb-6">Muallifning kitoblari</TypographyH2>
           <BooksGrid>
             <BookList books={mappedBooks} />
           </BooksGrid>

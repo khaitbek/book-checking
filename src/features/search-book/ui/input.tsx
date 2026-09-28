@@ -32,7 +32,7 @@ export function SearchBookInput({
     <Input
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      placeholder="Search book"
+      placeholder="Kitob nomi bo'yicha qidirish..."
     />
   );
 }

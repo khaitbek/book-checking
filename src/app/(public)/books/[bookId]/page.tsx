@@ -55,7 +55,7 @@ export default async function ({ params }: Props) {
   if (!book) redirect("/");
 
   return (
-    <section className="pb-12">
+    <section className="py-12">
       <div className="mx-auto container">
         <BookDetailsWidget book={book} />
         <InfluencerMentionsWidget bookId={bookId} />

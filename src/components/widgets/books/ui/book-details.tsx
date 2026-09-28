@@ -21,7 +21,7 @@ export function Widget({
                     <TypographyH2>{book.title}</TypographyH2>
                 </div>
                 <Link className="text-xl text-[#2b659b]/80 mb-10 hover:underline inline-block" href={`/authors/${book.author.id}`}>
-                    by {book.author.name}
+                    {book.author.name}
                 </Link>
 
                 <p className="max-h-[40vh] overflow-y-auto">

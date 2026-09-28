@@ -1,6 +1,5 @@
 import { Grid } from "@/components/widgets/influencer/ui/grid";
-import { Content, Root, Title } from "@/components/widgets/influencer/ui/widget";
-import { InfluencerWithRecommendationCount } from "@/core/domain/entities/influencer";
+import type { InfluencerWithRecommendationCount } from "@/core/domain/entities/influencer";
 import type { Result } from "neverthrow";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,7 +25,7 @@ export function Influencers({
     <>
       {match(influencers)
         .with([], () => (
-          <p className="text-neutral-400">No influencers available.</p>
+          <p className="text-neutral-400">Ma'lumotlar mavjud emas.</p>
         ))
         .otherwise(() => (
           <Grid>
@@ -45,7 +44,7 @@ export function Influencers({
                       {influencer.name}
                     </Influencer.Title>
                   </Link>
-                  <p className="mb-2">{influencer.numberOfRecommendations} recommendations</p>
+                  <p className="mb-2">{influencer.numberOfRecommendations} tavsiyalar</p>
                   <div className="flex flex-wrap gap-2">
                     {influencer.industry ? (
                       influencer.industry.split(",").map((tag) => (

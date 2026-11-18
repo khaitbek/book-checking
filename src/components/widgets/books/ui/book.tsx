@@ -36,7 +36,7 @@ export function BookCover({
   return (
     <div
       className={cn(
-        "w-full flex flex-col bg-white shadow-lg transition-all hover:shadow-xl",
+        "w-full flex flex-col bg-white shadow-lg transition-all hover:shadow-xl rounded-xl overflow-hidden min-h-87.5",
         className,
       )}
     >
@@ -68,7 +68,7 @@ export function BookCover({
             clipRule="evenodd"
           />
         </svg>
-        <span>{recommendationCount} tavsiyalar</span>
+        <span>{recommendationCount} recommendations</span>
       </div>
     </div>
   );

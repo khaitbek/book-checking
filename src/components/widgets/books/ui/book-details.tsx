@@ -11,7 +11,7 @@ export function Widget({ book }: { book: Book }) {
       <div className="flex flex-col items-center justify-center">
         <BookCover
           recommendationCount={book.recommendations.length}
-          className="shadow-2xl w-75"
+          className="shadow-2xl w-75 rounded-xl"
           src={book.coverImage}
           alt={book.title}
         />

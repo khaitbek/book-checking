@@ -36,7 +36,7 @@ export function BookRecommendation({
                   alt={book.title}
                   width={192}
                   height={288}
-                  className="w-full h-auto object-cover shadow-md transition-transform hover:-translate-y-1"
+                  className="w-full h-auto object-cover rounded-xl shadow-md transition-transform hover:-translate-y-1"
                 />
               </Link>
             </div>
@@ -50,22 +50,12 @@ export function BookRecommendation({
         {match(variant)
           .with("author", () => (
             <>
-              <TypographyH3>
-                <Link href={`/books/${book.id}`} className="">
-                  {book.title}
-                </Link>
-              </TypographyH3>
-              <Link
-                href={
-                  author.role.includes("AUTHOR")
-                    ? `/authors/${author.id}`
-                    : `/influencers/${author.id}`
-                }
-                target="_blank"
-                className="text-neutral-600 text-lg mb-6 underline"
-              >
-                Author - {author.name}
-              </Link>
+              <EntityLink
+                as={`/books/${book.id}`}
+                href="/books/[$bookId]"
+                imageUrl={null}
+                title={book.title}
+              />
             </>
           ))
           .with("book", () => (

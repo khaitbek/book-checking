@@ -33,7 +33,7 @@ export async function InfluencerRankedBooksWidget({
                 alt={influencer.name}
                 width={320}
                 height={320}
-                className="w-full h-auto object-cover bg-neutral-100 shadow-sm"
+                className="w-full h-auto object-cover bg-neutral-100 shadow-sm rounded-xl"
               />
             ))
             .otherwise(() => (

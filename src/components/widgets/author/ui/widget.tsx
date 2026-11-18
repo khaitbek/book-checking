@@ -30,13 +30,13 @@ export function AuthorImage({
         className,
       )}
     >
-      <div className="w-full relative aspect-3/4 bg-neutral-100 overflow-hidden">
+      <div className="w-full relative aspect-3/4 overflow-hidden">
         {src ? (
           <Image
             src={src}
             alt={alt || "Book cover"}
             fill
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
             {...props}
           />
         ) : (

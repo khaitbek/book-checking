@@ -14,7 +14,7 @@ export async function Root({ books, author }: { books: Book[]; author: User }) {
     <>
       <section className="py-12">
         <div className="">
-          <TypographyH2 className="mb-6">Muallifning kitoblari</TypographyH2>
+          <TypographyH2 className="mb-6">Books by author</TypographyH2>
           <BooksGrid>
             <BookList books={mappedBooks} />
           </BooksGrid>

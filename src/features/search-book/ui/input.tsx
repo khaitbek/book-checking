@@ -16,7 +16,7 @@ export function SearchBookInput({
 
   async function search() {
     const result = await query(debouncedValue);
-    console.log(result);
+
     if (result.success) {
       onChange(result.data);
     } else {
@@ -32,7 +32,7 @@ export function SearchBookInput({
     <Input
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      placeholder="Kitob nomi bo'yicha qidirish..."
+      placeholder="Search books..."
     />
   );
 }

@@ -5,6 +5,7 @@ import type { AuthorUser, User } from "@/core/domain/entities/user";
 import Image from "next/image";
 import Link from "next/link";
 import { match } from "ts-pattern";
+import { EntityLink } from "../../entity-link";
 
 interface Props {
   recommendation: Recommendation;
@@ -26,9 +27,9 @@ export function BookRecommendation({
     >
       {/* Rank and Book Cover */}
       <div className="flex gap-6 md:gap-8 shrink-0 w-full md:w-auto">
-        <div className="w-40 md:w-48 shrink-0">
-          {match(variant)
-            .with("author", () => (
+        {match(variant)
+          .with("author", () => (
+            <div className="w-40 md:w-48 shrink-0">
               <Link href={`/books/${book.id}`}>
                 <Image
                   src={book.coverImage}
@@ -38,20 +39,10 @@ export function BookRecommendation({
                   className="w-full h-auto object-cover shadow-md transition-transform hover:-translate-y-1"
                 />
               </Link>
-            ))
-            .with("book", () => (
-              <Link href={`/influencers/${recommendation.authorId}`}>
-                <Image
-                  src={author.image}
-                  alt={author.name}
-                  width={192}
-                  height={288}
-                  className="w-full h-auto object-cover shadow-md transition-transform hover:-translate-y-1"
-                />
-              </Link>
-            ))
-            .otherwise(() => null)}
-        </div>
+            </div>
+          ))
+          .with("book", () => null)
+          .otherwise(() => null)}
       </div>
 
       {/* Details */}
@@ -65,26 +56,27 @@ export function BookRecommendation({
                 </Link>
               </TypographyH3>
               <Link
-                href={author.role.includes("AUTHOR") ? `/authors/${author.id}` : `/influencers/${author.id}`}
+                href={
+                  author.role.includes("AUTHOR")
+                    ? `/authors/${author.id}`
+                    : `/influencers/${author.id}`
+                }
                 target="_blank"
                 className="text-neutral-600 text-lg mb-6 underline"
               >
-               Muallif - {author.name}
+                Author - {author.name}
               </Link>
             </>
           ))
           .with("book", () => (
-            <>
-              <TypographyH3>
-                <Link
-                  href={`/influencers/${author.id}`}
-                  className="underline"
-                  target="_blank"
-                >
-                  {author.name}
-                </Link>
-              </TypographyH3>
-            </>
+            <div className="flex gap-6 items-center">
+              <EntityLink
+                as={`/authors/${author.id}`}
+                href="/authors/[$authorId]"
+                imageUrl={author.image}
+                title={author.name}
+              />
+            </div>
           ))
           .otherwise(() => null)}
 
@@ -100,7 +92,7 @@ export function BookRecommendation({
           href={recommendation.sourceUrl}
           className="text-sm transition-colors inline-block px-2 py-1 rounded-sm max-w-max bg-foreground text-background"
         >
-          Manbani ko‘rish
+          See the source
         </Link>
       </div>
     </div>

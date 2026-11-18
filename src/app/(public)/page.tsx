@@ -1,4 +1,3 @@
-import { TypographyH1 } from "@/components/ui/typography";
 import { Influencers } from "./_components/influencers";
 import { getAllInfluencersUseCase } from "@/composition";
 import { err, ok } from "neverthrow";
@@ -6,28 +5,15 @@ import type { Metadata } from "next";
 import { SearchBook } from "@/features/search-book";
 
 export const metadata: Metadata = {
-  title: "Siz sevgan insonlar qaysi kitoblarni tavsiya qiladi?",
+  title: "Book reviews by celebrities, influencers and authors",
   description:
-    "O'zbekiston va dunyodagi eng mashhur insonlar, mualliflar va fikr yetakchilarining tavsiya qilgan kitoblari.",
+    "Read reviews about books you want to buy from the people you know.",
 };
 
 export default async function HomePage() {
   return (
     <>
-      <div className="container mx-auto py-4">
-        <div className="">
-          <TypographyH1>
-            Siz sevgan insonlar qaysi kitoblarni tavsiya qiladi?
-          </TypographyH1>
-          <p>
-            Biz sizga O'zbekiston va dunyodagi eng mashhur insonlar, mualliflar
-            va fikr yetakchilarining tavsiya qilgan kitoblarini taqdim etamiz.
-            Ushbu ma'lumotlar ijtimoiy tarmoq sahifalari, vebsaytlar,
-            intervyular va boshqa manbalardan yig'ilgan.
-          </p>
-        </div>
-      </div>
-      <section>
+      <section className="pb-4 pt-6">
         <div className="container mx-auto">
           <SearchBook />
         </div>

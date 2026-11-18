@@ -12,15 +12,15 @@ export async function InfluencerRankedBooksWidget({
 }) {
   const result = await findRecommendationsByInfluencer.execute(influencer.id);
 
-  if (result.isErr()) return "Failed to get influencer recommendations";
+  if (result.isErr()) return "Failed to get influencer reviews";
 
   const recommendations = result.value;
 
   return (
     <div className="flex flex-col gap-12 w-full">
       <TypographyH2>
-        <span className="underline mr-2">{influencer.name}</span>
-        tavsiya qilgan kitoblar!
+        Book reviews by
+        <span className="underline mx-2">{influencer.name}</span>
       </TypographyH2>
 
       {/* Header Section */}
@@ -38,7 +38,7 @@ export async function InfluencerRankedBooksWidget({
             ))
             .otherwise(() => (
               <div className="w-full aspect-square bg-neutral-200 flex items-center justify-center">
-                Rasm mavjud emas
+                No image
               </div>
             ))}
         </div>
@@ -48,15 +48,17 @@ export async function InfluencerRankedBooksWidget({
 
       {/* Books List Section */}
       <div className="flex flex-col gap-16 mt-8">
-        {recommendations.map(({ recommendation, book }) => (
-          <BookRecommendation
-            key={recommendation.id}
-            // @ts-expect-error
-            author={influencer}
-            book={book}
-            recommendation={recommendation}
-          />
-        ))}
+        {result.isErr()
+          ? "Failed to get influencer reviews"
+          : recommendations.map(({ recommendation, book }) => (
+              <BookRecommendation
+                key={recommendation.id}
+                // @ts-expect-error
+                author={influencer}
+                book={book}
+                recommendation={recommendation}
+              />
+            ))}
       </div>
     </div>
   );

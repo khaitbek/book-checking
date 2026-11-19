@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/sheet";
 
 import { Form } from "@/features/add-new-author/ui/form";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function SheetView() {
+  const router = useRouter();
   const [open, setIsOpen] = useState(true);
 
   return (
@@ -22,7 +23,7 @@ export function SheetView() {
       onOpenChange={(state) => {
         setIsOpen(state);
         if (state == false) {
-          redirect("/admin/authors");
+          router.back();
         }
       }}
     >
@@ -34,7 +35,7 @@ export function SheetView() {
           <Form
             onSuccess={() => {
               setIsOpen(false);
-              redirect("/admin/authors");
+              router.back();
             }}
           />
         </div>

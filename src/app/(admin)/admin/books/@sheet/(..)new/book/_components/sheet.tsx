@@ -9,7 +9,6 @@ import {
 
 import { Form } from "@/features/add-new-book/ui/form";
 import { useRouter } from "next/navigation";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export function SheetView() {
@@ -22,7 +21,7 @@ export function SheetView() {
       onOpenChange={(state) => {
         setIsOpen(state);
         if (state == false) {
-          redirect("/admin/books");
+          router.back();
         }
       }}
     >
@@ -36,8 +35,7 @@ export function SheetView() {
             categories={[]}
             onSuccess={() => {
               setIsOpen(false);
-              router.push("/admin/books");
-              router.refresh();
+              router.back();
             }}
           />
         </div>

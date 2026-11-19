@@ -4,3 +4,4 @@ Tasks
 - fix translations/labels (done)
 - use single entity links everywhere (done)
 - make all images rounded
+- use single image-uploader widget

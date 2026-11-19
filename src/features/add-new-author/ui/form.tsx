@@ -17,8 +17,14 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { mutate } from "../api/mutation";
 import { type FormFields, formSchema } from "../model/schema";
+import { useQueryClient } from "@tanstack/react-query";
 
-export function Form() {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export function Form(props: Props) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
@@ -27,7 +33,6 @@ export function Form() {
       name: "",
       bio: "",
       industry: "",
-      image: null,
       email: null,
     },
   });
@@ -35,18 +40,17 @@ export function Form() {
   const { isSubmitting, isValid } = form.formState;
 
   async function onSubmit(data: FormFields) {
-    try {
-      const response = await mutate(data);
-      if (!response.success) {
-        toast.error(response.error || "Failed to create author");
-        return;
-      }
-      toast.success(`Author "${response.author.name}" created successfully!`);
-      form.reset();
-      router.refresh();
-    } catch {
-      toast.error("An unexpected error occurred.");
+    const response = await mutate(data);
+    if (!response.success) {
+      toast.error(response.error || "Failed to create author");
+      return;
     }
+    queryClient.invalidateQueries({
+      queryKey: ["authors"],
+    });
+    toast.success(`Author "${response.author?.name}" created successfully!`);
+    form.reset();
+    props.onSuccess?.();
   }
 
   return (
@@ -130,6 +134,21 @@ export function Form() {
                 autoComplete="off"
                 disabled={isSubmitting}
                 rows={4}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="image"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="user-image">Image</FieldLabel>
+              <Input
+                onChange={(evt) => field.onChange(evt.target.files?.[0])}
+                type="file"
+                id="user-image"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>

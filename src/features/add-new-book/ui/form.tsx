@@ -16,7 +16,7 @@ import { Widget as ImageUploadWidget } from "@/components/widgets/image-upload/u
 import { Category } from "@/core/domain/entities/category";
 import { User } from "@/core/domain/entities/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -28,10 +28,11 @@ import { FormFields, formSchema } from "../model/schema";
 interface Props {
   authors: User[];
   categories: Category[];
+  onSuccess?: () => void;
 }
 
 export function Form(props: Props) {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const mutationResult = useMutation({
     mutationKey: ["add-new-book"],
     mutationFn: async (fields: FormFields) => {
@@ -41,9 +42,12 @@ export function Form(props: Props) {
       if (result.success === false) {
         return toast.error(result.error);
       }
+      queryClient.invalidateQueries({
+        queryKey: ["books"],
+      });
       form.reset();
       toast.success("Successfully added!");
-      router.push("/admin/books");
+      props.onSuccess?.();
     },
   });
   const form = useForm<FormFields>({

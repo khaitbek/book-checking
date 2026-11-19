@@ -17,28 +17,11 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { mutate } from "../api/mutation";
-
-import {
-  Attachment,
-  AttachmentAction,
-  AttachmentActions,
-  AttachmentContent,
-  AttachmentDescription,
-  AttachmentMedia,
-  AttachmentTitle,
-  AttachmentTrigger,
-} from "@/components/ui/attachment";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { type FormFields, formSchema } from "../model/schema";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Form() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
@@ -58,18 +41,16 @@ export function Form() {
     watchedRole.includes("AUTHOR") || watchedRole.includes("INFLUENCER");
 
   async function onSubmit(data: FormFields) {
-    try {
-      const response = await mutate(data);
-      if (!response.success) {
-        toast.error(response.error || "Failed to create user");
-        return;
-      }
-      toast.success(`User "${response.user.name}" created successfully!`);
-      form.reset();
-      router.refresh();
-    } catch {
-      toast.error("An unexpected error occurred.");
+    const response = await mutate(data);
+    if (!response.success) {
+      toast.error(response.error || "Failed to create user");
+      return;
     }
+    queryClient.invalidateQueries({
+      queryKey: ["users"],
+    });
+    toast.success(`User "${response.user.name}" created successfully!`);
+    form.reset();
   }
 
   return (
@@ -220,9 +201,7 @@ export function Form() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="user-image">
-                    Image
-                  </FieldLabel>
+                  <FieldLabel htmlFor="user-image">Image</FieldLabel>
                   <Input
                     onChange={(evt) => field.onChange(evt.target.files?.[0])}
                     type="file"

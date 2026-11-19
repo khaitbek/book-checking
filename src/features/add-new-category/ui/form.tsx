@@ -15,8 +15,10 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { mutate } from "../api/mutation";
 import { FormFields, formSchema } from "../model/schema";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function Form() {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
@@ -29,26 +31,21 @@ export function Form() {
   const { isSubmitting, isValid } = form.formState;
 
   async function onSubmit(data: FormFields) {
-    try {
-      const response = await mutate(data);
-      if (!response.success) {
-        toast.error(response.error || "Failed to create category");
-        return;
-      }
-
-      toast.success(
-        `Category "${response.category?.name}" created successfully!`,
-        {
-          icon: <CheckCircle2 className="h-5 w-5 text-emerald-500" />,
-        },
-      );
-
-      form.reset();
-      router.refresh();
-    } catch (error) {
-      toast.error("An unexpected error occurred while creating the category.");
-      console.error(error);
+    const response = await mutate(data);
+    if (!response.success) {
+      toast.error(response.error || "Failed to create category");
+      return;
     }
+    queryClient.invalidateQueries({
+      queryKey: ["categories"],
+    });
+    toast.success(
+      `Category "${response.category?.name}" created successfully!`,
+      {
+        icon: <CheckCircle2 className="h-5 w-5 text-emerald-500" />,
+      },
+    );
+    form.reset();
   }
 
   return (

@@ -20,7 +20,11 @@ import { mutate } from "../api/mutation";
 import { type FormFields, formSchema } from "../model/schema";
 import { useQueryClient } from "@tanstack/react-query";
 
-export function Form() {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export function Form(props: Props) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const form = useForm<FormFields>({
@@ -51,6 +55,7 @@ export function Form() {
     });
     toast.success(`User "${response.user.name}" created successfully!`);
     form.reset();
+    props.onSuccess?.();
   }
 
   return (

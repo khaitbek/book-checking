@@ -22,7 +22,11 @@ import type { Book } from "@/core/domain/entities/book";
 import { Textarea } from "@/components/ui/textarea";
 import { searchBooks, searchUsersAction } from "../api/query";
 
-export function Form() {
+interface Props {
+  onSuccess?: () => void;
+}
+
+export function Form(props: Props) {
   const router = useRouter();
   const form = useForm<FormFields>({
     resolver: zodResolver(formSchema),
@@ -42,6 +46,7 @@ export function Form() {
 
     form.reset();
     router.refresh();
+    props.onSuccess?.();
   }
 
   return (

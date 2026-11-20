@@ -6,8 +6,10 @@ import { redirect } from "next/navigation";
 
 export default async function AdminLayout({
   children,
+  sheet,
 }: {
   children: React.ReactNode;
+  sheet: React.ReactNode;
 }) {
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -23,6 +25,7 @@ export default async function AdminLayout({
           <SidebarTrigger />
           <div className="p-6 w-full">{children}</div>
         </main>
+        {sheet}
       </SidebarProvider>
     </>
   );

@@ -64,7 +64,16 @@ export default function RootLayout({
             </TooltipProvider>
           </QueryProvider>
         </NuqsAdapter>
-        <Toaster richColors position="top-right" closeButton />
+        <Toaster
+          toastOptions={{
+            classNames: {
+              loading: "!bg-foreground !text-background",
+            },
+          }}
+          richColors
+          position="top-right"
+          closeButton
+        />
       </body>
     </html>
   );

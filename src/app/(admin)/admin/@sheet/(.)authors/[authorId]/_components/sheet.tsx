@@ -9,6 +9,7 @@ import {
 import type { AuthorUser, User } from "@/core/domain/entities/user";
 
 import { Form } from "@/features/edit-author/ui/form";
+import { UploadAuthorImageForm } from "@/features/upload-author-image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -34,7 +35,8 @@ export function SheetView(props: Props) {
         <SheetHeader>
           <SheetTitle>Edit author</SheetTitle>
         </SheetHeader>
-        <div className="px-6 pb-6">
+        <div className="px-6 py-6 space-y-6">
+          <UploadAuthorImageForm author={props.author} />
           <Form
             author={props.author}
             onSuccess={() => {

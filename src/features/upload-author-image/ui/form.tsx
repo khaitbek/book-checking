@@ -18,7 +18,10 @@ export function Form(props: Props) {
   const mutation = useMutation({
     mutationKey: ["upload-author-image", props.author.id],
     mutationFn: async ({ file }: { file: File }) => {
-      const loader = toast.loading("Uploading...");
+      const loader = toast.loading("Uploading...", {
+        id: `upload-author-image-${props.author.id}`,
+        richColors: true
+      });
       const result = await mutate({
         authorId: props.author.id,
         file,
@@ -31,23 +34,31 @@ export function Form(props: Props) {
       router.refresh();
       toast.dismiss(loader);
     },
+    onSettled() {
+      toast.dismiss(`upload-author-image-${props.author.id}`);
+    },
+    onError(error, variables, onMutateResult, context) {
+      toast.error(error.message);
+    },
   });
 
   return (
-    <ImageUploadWidget
-      onImageCropped={(image) => {
-        const file = new File(
-          [image],
-          `${props.author.name.toLowerCase()}-cover`,
-          {
-            type: image.type,
-            lastModified: new Date().getTime(),
-          },
-        );
-        mutation.mutate({
-          file,
-        });
-      }}
-    />
+    <section>
+      <ImageUploadWidget
+        onImageCropped={(image) => {
+          const file = new File(
+            [image],
+            `${props.author.name.toLowerCase()}-cover`,
+            {
+              type: image.type,
+              lastModified: new Date().getTime(),
+            },
+          );
+          mutation.mutate({
+            file,
+          });
+        }}
+      />
+    </section>
   );
 }

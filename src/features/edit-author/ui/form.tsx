@@ -32,6 +32,7 @@ export function Form(props: Props) {
         id: props.author.id,
         update: {
           ...fields,
+          image: null,
         },
       });
       if (result.success === false) {

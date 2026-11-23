@@ -29,8 +29,9 @@ export class ImageKitImageUploadService implements ImageUploadPort {
       });
     })();
 
-    if (authResult.isErr())
+    if (authResult.isErr()) {
       return errAsync((authResult.error as Error).message);
+    }
 
     const uploadResponse = await ResultAsync.fromThrowable(async () => {
       const arrayBuffer = await props.file.arrayBuffer();

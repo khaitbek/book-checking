@@ -21,6 +21,7 @@ import { useEditCategoryStore } from "../model/store";
 
 type Props = {
   category: Pick<Category, "id" | "name">;
+  onSuccess?: () => void;
 };
 
 export function Form(props: Props) {
@@ -50,6 +51,7 @@ export function Form(props: Props) {
     store.close();
     form.reset();
     router.refresh();
+    props.onSuccess?.();
   }
 
   return (
